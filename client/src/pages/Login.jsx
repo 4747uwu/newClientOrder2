@@ -228,22 +228,7 @@ const LoginPage = () => {
         <div className="w-full max-w-md">
           
           {/* Mobile logo (visible only on small screens) */}
-          <div className=" mb-4 ml-14 text-center">
-            <img 
-      src="/logo3.png" 
-      alt="Xcentic PACS Logo" 
-      className="h-24 w-auto drop-shadow-2xl mb-2"
-    />
-    <div className="ml-16 mt-[-24px]">
-      <ShinyText 
-        text="Empowering Technologist Professionally" 
-        disabled={false} 
-        speed={3} 
-        className='text-sm' 
-      />
-    </div>
-           
-          </div>
+          
 
           {/* Header */}
           <div className="text-center space-y-3 mb-8">
