@@ -147,7 +147,7 @@ const Navbar = ({
               
               <div className="hidden md:block">
                 <div className="flex items-center space-x-2">
-                  <h1 className="text-lg font-bold text-black tracking-tight">{title}</h1>
+                  <h1 className="text-lg font-bold text-black tracking-tight">Demo Dashboard</h1>
                   {subtitle && (
                     <span className="text-xs text-gray-500 font-medium">• {subtitle}</span>
                   )}
