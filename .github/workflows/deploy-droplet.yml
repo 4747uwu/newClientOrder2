@@ -48,7 +48,7 @@ jobs:
           cd /opt/medical-project
           
           # Clean up and get fresh code
-          rm -rf ordnewClientOrder2
+          rm -rf newClientOrder2
           git clone https://github.com/4747uwu/newClientOrder2.git
           
           # Navigate to the MedicalProject subdirectory
