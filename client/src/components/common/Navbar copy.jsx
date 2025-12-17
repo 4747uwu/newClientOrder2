@@ -1,16 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useAuth } from '../../hooks/useAuth';
-import {
+import { 
+  Globe, 
   ChevronDown,
-  Bell,
+  Plus,
+  Search,
+  RefreshCw,
   LogOut,
   User,
   Settings,
-  Globe,
   Building,
-  Search,
-  Plus,
-  RefreshCw,
+  Bell,
   Menu,
   X,
   Copy
@@ -62,10 +62,11 @@ const Navbar = ({
   const handleOrganizationSwitch = async (orgIdentifier) => {
     setIsLoading(true);
     try {
-      await switchOrganization(orgIdentifier);
-      setShowOrgDropdown(false);
-      setSearchTerm('');
-      window.location.reload();
+      const success = await switchOrganization(orgIdentifier === 'global' ? null : orgIdentifier);
+      if (success) {
+        setShowOrgDropdown(false);
+        onRefresh?.();
+      }
     } catch (error) {
       console.error('Failed to switch organization:', error);
     } finally {
@@ -86,7 +87,7 @@ const Navbar = ({
   };
 
   const handleCopySuccess = () => {
-    setShowCopyModal(false);
+    onRefresh?.();
   };
 
   const filteredOrganizations = availableOrganizations.filter(org =>
@@ -98,7 +99,7 @@ const Navbar = ({
   const getInitials = (name) => {
     return name
       .split(' ')
-      .map(n => n[0])
+      .map(word => word[0])
       .join('')
       .toUpperCase()
       .slice(0, 2);
@@ -106,13 +107,13 @@ const Navbar = ({
 
   const getRoleBadgeColor = (role) => {
     const colors = {
-      super_admin: 'bg-purple-100 text-purple-700',
-      admin: 'bg-blue-100 text-blue-700',
-      doctor: 'bg-green-100 text-green-700',
-      verifier: 'bg-yellow-100 text-yellow-700',
-      default: 'bg-gray-100 text-gray-700'
+      'super_admin': 'bg-black text-white',
+      'admin': 'bg-gray-800 text-white',
+      'owner': 'bg-gray-700 text-white',
+      'lab_staff': 'bg-gray-600 text-white',
+      'doctor_account': 'bg-gray-500 text-white'
     };
-    return colors[role] || colors.default;
+    return colors[role] || 'bg-gray-400 text-white';
   };
 
   const selectedOrgName = currentOrganizationContext === 'global' || !currentOrganizationContext
@@ -125,11 +126,12 @@ const Navbar = ({
 
   return (
     <>
+      {/* ✅ COMPACT NAVBAR - Height reduced from 16 to 12 */}
       <nav className="bg-white border-b border-gray-300 shadow-sm sticky top-0 z-40">
         <div className="max-w-8xl mx-auto px-3">
           <div className="flex justify-between items-center h-12">
             
-            {/* LEFT SIDE - Logo and Title */}
+            {/* ✅ LEFT SECTION - More compact */}
             <div className="flex items-center space-x-3">
               <button
                 onClick={() => setShowMobileMenu(!showMobileMenu)}
@@ -137,13 +139,6 @@ const Navbar = ({
               >
                 {showMobileMenu ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
               </button>
-              
-              {/* Logo */}
-              <img 
-                src="/logo.png" 
-                alt="Xcentic PACS" 
-                className="h-8 w-auto"
-              />
               
               <div className="hidden md:block">
                 <div className="flex items-center space-x-2">
@@ -155,10 +150,22 @@ const Navbar = ({
               </div>
             </div>
 
-            {/* RIGHT SIDE - Actions and Profile */}
+            {/* ✅ RIGHT SECTION - More compact */}
             <div className="flex items-center space-x-2">
               
-              {/* Additional Actions */}
+              {/* ✅ ADD: COPY STUDY BUTTON (Before additional actions) */}
+              {/* {['super_admin', 'admin'].includes(currentUser?.role) && (
+                <button
+                  onClick={handleOpenCopyModal}
+                  className="hidden md:flex items-center space-x-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors bg-teal-600 text-white hover:bg-teal-700"
+                  title="Copy study between organizations"
+                >
+                  <Copy className="h-3.5 w-3.5" />
+                  <span>Copy Study</span>
+                </button>
+              )} */}
+
+              {/* ✅ COMPACT ADDITIONAL ACTIONS */}
               {additionalActions.map((action, index) => (
                 <button
                   key={index}
@@ -175,7 +182,7 @@ const Navbar = ({
                 </button>
               ))}
 
-              {/* Refresh Button */}
+              {/* ✅ COMPACT REFRESH BUTTON */}
               {onRefresh && (
                 <button
                   onClick={onRefresh}
@@ -186,7 +193,7 @@ const Navbar = ({
                 </button>
               )}
 
-              {/* Notifications */}
+              {/* ✅ COMPACT NOTIFICATIONS */}
               {notifications > 0 && (
                 <button className="relative p-1.5 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded transition-colors">
                   <Bell className="h-4 w-4" />
@@ -196,7 +203,7 @@ const Navbar = ({
                 </button>
               )}
 
-              {/* Organization Selector */}
+              {/* ✅ COMPACT ORGANIZATION SELECTOR */}
               {showOrganizationSelector && (
                 <div className="relative" ref={orgDropdownRef}>
                   <button
@@ -228,7 +235,7 @@ const Navbar = ({
                       </div>
 
                       <div className="max-h-48 overflow-y-auto">
-                        {/* Global Context Option */}
+                        {/* Global Context */}
                         <button
                           onClick={() => handleOrganizationSwitch('global')}
                           className={`w-full text-left px-3 py-2.5 hover:bg-gray-50 transition-colors ${
@@ -246,7 +253,7 @@ const Navbar = ({
                           </div>
                         </button>
 
-                        {/* Organization List */}
+                        {/* Organizations */}
                         {filteredOrganizations.map(org => (
                           <button
                             key={org._id}
@@ -286,8 +293,8 @@ const Navbar = ({
                         <div className="p-3 border-t border-gray-200">
                           <button 
                             onClick={() => {
-                              setShowOrgDropdown(false);
                               onCreateOrganization();
+                              setShowOrgDropdown(false);
                             }}
                             className="w-full flex items-center justify-center space-x-1.5 text-xs font-medium text-black hover:text-gray-700 py-1.5 hover:bg-gray-50 rounded transition-colors"
                           >
@@ -301,7 +308,7 @@ const Navbar = ({
                 </div>
               )}
 
-              {/* Profile Dropdown */}
+              {/* ✅ COMPACT PROFILE DROPDOWN */}
               <div className="relative" ref={profileDropdownRef}>
                 <button
                   onClick={() => setShowProfileDropdown(!showProfileDropdown)}
@@ -367,7 +374,7 @@ const Navbar = ({
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* ✅ COMPACT MOBILE MENU */}
         {showMobileMenu && (
           <div className="md:hidden border-t border-gray-200 bg-white">
             <div className="px-3 py-2 space-y-2">
@@ -378,12 +385,12 @@ const Navbar = ({
                 )}
               </div>
               
-              {/* Copy Study Button for mobile */}
+              {/* ✅ ADD: Copy Study Button in Mobile Menu */}
               {['super_admin', 'admin'].includes(currentUser?.role) && (
                 <button
                   onClick={() => {
-                    setShowMobileMenu(false);
                     handleOpenCopyModal();
+                    setShowMobileMenu(false);
                   }}
                   className="w-full flex items-center space-x-2 px-2.5 py-1.5 rounded text-xs font-medium transition-colors bg-teal-600 text-white hover:bg-teal-700"
                 >
@@ -396,8 +403,8 @@ const Navbar = ({
                 <button
                   key={index}
                   onClick={() => {
-                    setShowMobileMenu(false);
                     action.onClick();
+                    setShowMobileMenu(false);
                   }}
                   className={`w-full flex items-center space-x-2 px-2.5 py-1.5 rounded text-xs font-medium transition-colors ${
                     action.variant === 'primary' 
@@ -424,11 +431,11 @@ const Navbar = ({
         </div>
       )}
 
-      {/* Study Copy Modal */}
+      {/* ✅ ADD: Study Copy Modal */}
       <StudyCopyModal
         isOpen={showCopyModal}
         onClose={handleCloseCopyModal}
-        bharatPacsId=""
+        bharatPacsId="" // Empty means user needs to input
         currentOrgName={currentOrgName}
         onSuccess={handleCopySuccess}
       />

@@ -870,7 +870,7 @@ const WorklistTable = ({
             <tr className="text-white text-xs font-bold bg-gradient-to-r from-gray-800 via-gray-900 to-black shadow-lg">
               <th className="px-3 py-4 text-center border-r border-gray-700" style={{ width: '100px' }}>
                 <div className="flex items-center justify-center gap-1.5">
-                  <span>Xcentic ID</span>
+                  <span>VICTORY HEALTHCARE ID</span>
                 </div>
               </th>
               <th className="px-3 py-4 text-center border-r border-gray-700" style={{ width: '130px' }}>

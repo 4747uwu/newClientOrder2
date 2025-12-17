@@ -48,11 +48,11 @@ jobs:
           cd /opt/medical-project
           
           # Clean up and get fresh code
-          rm -rf order22
-          git clone https://github.com/4747uwu/order22.git
+          rm -rf ordnewClientOrder2
+          git clone https://github.com/4747uwu/newClientOrder2.git
           
           # Navigate to the MedicalProject subdirectory
-          cd order22
+          cd ordnewClientOrder2
           
           # ✅ FIXED: Create production environment file with LOCAL MongoDB
           cat > .env << 'EOF'
