@@ -140,9 +140,9 @@ const Navbar = ({
               
               {/* Logo */}
               <img 
-                src="/logo.png" 
-                alt="Xcentic PACS" 
-                className="h-8 w-auto"
+                src="/ant.png" 
+                alt="ant PACS" 
+                className="h-10 w-auto"
               />
               
               <div className="hidden md:block">

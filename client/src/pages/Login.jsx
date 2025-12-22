@@ -185,17 +185,17 @@ const LoginPage = () => {
   {/* Logo at top left corner */}
   <div className="absolute top-8 left-8">
     <img 
-      src="/logo3.png" 
+      src="/ant.png" 
       alt="Xcentic PACS Logo" 
-      className="h-24 w-auto drop-shadow-2xl mb-2"
+      className="h-36 w-auto drop-shadow-2xl mb-2"
     />
     <div className="ml-26 mt-[-24px]">
-      <ShinyText 
+      {/* <ShinyText 
         text="Empowering Technologist Professionally" 
         disabled={false} 
         speed={3} 
         className='text-sm' 
-      />
+      /> */}
     </div>
   </div>
 
